@@ -35,8 +35,12 @@ def linear_regresion(x_train: pd.DataFrame, y_train: pd.DataFrame) -> list:
     return res
 
 
-def build(x_test: pd.DataFrame, y_test: pd.DataFrame, x_train: pd.DataFrame, y_train: pd.DataFrame):
-    pass
+def build(x_test: pd.DataFrame, y_test: pd.DataFrame, x_train: pd.DataFrame, y_train: pd.DataFrame, selected_col: list):
+    x_train_rfe = x_train[selected_col]
+    x_train_rfe = sm.add_constant(x_train_rfe)
+    lm = sm.OLS(y_train, x_train_rfe).fit()
+
+    print(lm.summary())
 
 
 if __name__ == '__main__':
@@ -51,4 +55,5 @@ if __name__ == '__main__':
     x_train = df_train
     y_test = df_test.pop('Rings')
     x_test = df_test
-    linear_regresion(x_train, y_train)
+    col = [x[0] for x in linear_regresion(x_train, y_train) if x[1]]
+    build(x_test, y_test, x_train, y_train, col)
