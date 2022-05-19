@@ -1,10 +1,13 @@
 import pandas as pd
+import statsmodels.api as sm
+import os
+import matplotlib.pyplot as plt
+import seaborn as sns
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.feature_selection import RFE
+from sklearn.preprocessing import MinMaxScaler
 from pandas_profiling import ProfileReport
-import statsmodels.api as sm
-import os
 
 
 def import_df() -> pd.DataFrame:
@@ -39,8 +42,10 @@ def build(x_test: pd.DataFrame, y_test: pd.DataFrame, x_train: pd.DataFrame, y_t
     x_train_rfe = x_train[selected_col]
     x_train_rfe = sm.add_constant(x_train_rfe)
     lm = sm.OLS(y_train, x_train_rfe).fit()
-
-    print(lm.summary())
+    y_train_rings = lm.predict(x_train_rfe)
+    fig = plt.figure()
+    sns.displot((y_train - y_train_rings))
+    plt.show()
 
 
 if __name__ == '__main__':
