@@ -34,6 +34,12 @@ def sex_to_bin(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
+def print_distribution_of_data(df: pd.DataFrame) -> None:
+    for name in df.columns:
+        sns.displot(df[name])
+        plt.show(block=True)
+
+
 # splitting the DataFrame into train and test sets in a 7:3 ratio, without randomness
 def split_train_test(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     np.random.seed(0)
@@ -96,6 +102,7 @@ if __name__ == '__main__':
     # until deleted or name changes)
     if not os.path.isfile(out_file):
         gen_raport(df, out_file)
+    print_distribution_of_data(df)
     df = sex_to_bin(df)
     x_train, y_train, x_test, y_test = split_train_test(df)
     res = calculate_rfe(x_train, y_train)
